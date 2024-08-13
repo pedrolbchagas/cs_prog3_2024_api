@@ -103,18 +103,21 @@ sw.get('/listjogadores', function (req, res, next) {
             var q = "select nickname,senha,quantpontos,quantdinheiro,to_char(datacadastro, 'dd/mm/yyyy hh24:mi:ss') as datacadastro,to_char(data_ultimo_login, 'dd/mm/yyyy hh24:mi:ss') as data_ultimo_login,situacao, 0 as patentes, e.cep, e.complemento from tb_jogador j, tb_endereco e where e.nicknamejogador=j.nickname order by nickname asc"
                 
             client.query(q,async function (err, result) {
-                                if (err) {
+                if (err) {
                     console.log('retornou 400 no listjogadores');
                     console.log(err);
 
                     res.status(400).send('{' + err + '}');
                 } else {
 
-                   for(var i=0; i<result.rows.length; i++){
+                   for(var i=0; i < result.rows.length; i++){
                         try{
                             pj = await client.query('select codpatente from'
                            + ' tb_jogador_conquista_patente '
                              + 'where nickname = $1', [result.rows[i].nickname])
+result.rows[i].patentes = pj.rows
+
+
                         } catch(err){
                             res.status(400).send('{'+err+'}')
                         }
