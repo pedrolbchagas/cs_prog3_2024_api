@@ -119,7 +119,7 @@ sw.get("/listjogadores", function (req, res, next) {
           for (var i = 0; i < result.rows.length; i++) {
             try {
               ej = await client.query(
-                "select codigo, cep, complemento f rom tb_endereco where nicknamejogador = $1 ",
+                "select codigo, cep, complemento from tb_endereco where nicknamejogador = $1 ",
                 [result.rows[i].nickname]
               );
               result.rows[i].endereco = ej.rows;
